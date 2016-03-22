@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		153A517D1CA0EE01004C9245 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 153A517C1CA0EE01004C9245 /* ImageIO.framework */; };
+		153A517F1CA0EE80004C9245 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 153A517E1CA0EE80004C9245 /* MobileCoreServices.framework */; };
 		157B23991C8933F3003757B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 157B23981C8933F3003757B9 /* main.m */; };
 		157B239C1C8933F3003757B9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 157B239B1C8933F3003757B9 /* AppDelegate.m */; };
 		157B239F1C8933F3003757B9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 157B239E1C8933F3003757B9 /* ViewController.m */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		153A517C1CA0EE01004C9245 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		153A517E1CA0EE80004C9245 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		157B23941C8933F3003757B9 /* MXVideoTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MXVideoTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		157B23981C8933F3003757B9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		157B239A1C8933F3003757B9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -67,6 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				153A517F1CA0EE80004C9245 /* MobileCoreServices.framework in Frameworks */,
+				153A517D1CA0EE01004C9245 /* ImageIO.framework in Frameworks */,
 				157B23CF1C893527003757B9 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,6 +97,8 @@
 		157B238B1C8933F3003757B9 = {
 			isa = PBXGroup;
 			children = (
+				153A517E1CA0EE80004C9245 /* MobileCoreServices.framework */,
+				153A517C1CA0EE01004C9245 /* ImageIO.framework */,
 				157B23D01C893954003757B9 /* Resources */,
 				157B23CE1C893527003757B9 /* AVFoundation.framework */,
 				157B23961C8933F3003757B9 /* MXVideoTool */,
@@ -532,6 +540,7 @@
 				157B23C31C8933F4003757B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		157B23C41C8933F4003757B9 /* Build configuration list for PBXNativeTarget "MXVideoToolTests" */ = {
 			isa = XCConfigurationList;
@@ -540,6 +549,7 @@
 				157B23C61C8933F4003757B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		157B23C71C8933F4003757B9 /* Build configuration list for PBXNativeTarget "MXVideoToolUITests" */ = {
 			isa = XCConfigurationList;
@@ -548,6 +558,7 @@
 				157B23C91C8933F4003757B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

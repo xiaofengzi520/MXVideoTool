@@ -8,6 +8,8 @@
 
 #import "MXVideoMergeTool.h"
 #import <AVFoundation/AVFoundation.h>
+#import <ImageIO/ImageIO.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #define VIDEO_FOLDER @"videos"
 
 
@@ -120,6 +122,98 @@
     NSString *fileName = [[path stringByAppendingPathComponent:nowTimeStr] stringByAppendingString:@"merge.mp4"];
     
     return fileName;
+}
+
++ (NSString *)exportGifImagesWithVideoUrl:(NSURL *)url
+{
+    CGFloat duration = [MXVideoMergeTool durationForVideo:url];
+    CGFloat delay = 0.05;
+    CGFloat currentTime = 0;
+    NSMutableArray *imageArr = [NSMutableArray array];
+    NSMutableArray *delayArr = [NSMutableArray array];
+    while (currentTime < duration) {
+        UIImage *image = [MXVideoMergeTool thumbnailImageForVideo:url atTime:currentTime];
+        if (image) {
+            [imageArr addObject:image];
+            [delayArr addObject:@(delay)];
+        }
+        currentTime += delay;
+        if (currentTime > duration) {
+            currentTime = duration;
+            UIImage *image = [MXVideoMergeTool thumbnailImageForVideo:url atTime:currentTime];
+            if (image) {
+                [imageArr addObject:image];
+                [delayArr addObject:@(delay)];
+            }
+        }
+    }
+    if (imageArr.count > 0) {
+        NSString * gifPath = [MXVideoMergeTool exportGifImages:imageArr delays:delayArr loopCount:0];
+        return gifPath;
+    }
+    return nil;
+    
+}
+
++ (NSString *)exportGifImages:(NSArray *)images delays:(NSArray *)delays loopCount:(NSUInteger)loopCount
+{
+    NSString *fileName = [NSString stringWithFormat: @"%.0f.%@", [NSDate timeIntervalSinceReferenceDate] * 1000.0, @"gif"];
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+    CGImageDestinationRef destination = CGImageDestinationCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:filePath],
+                                                                        kUTTypeGIF, images.count, NULL);
+    if(!loopCount){
+        loopCount = 0;
+    }
+    NSDictionary *gifProperties = @{ (__bridge id)kCGImagePropertyGIFDictionary: @{
+                                             (__bridge id)kCGImagePropertyGIFLoopCount: @(loopCount), // 0 means loop forever
+                                             }
+                                     };
+    float delay = 0.1; //默认每一帧间隔0.1秒
+    for (int i=0; i<images.count; i++) {
+        UIImage *itemImage = images[i];
+        if(delays && i<delays.count){
+            delay = [delays[i] floatValue];
+        }
+        //每一帧对应的延迟时间
+        NSDictionary *frameProperties = @{(__bridge id)kCGImagePropertyGIFDictionary: @{
+                                                  (__bridge id)kCGImagePropertyGIFDelayTime: @(delay), // a float (not double!) in seconds, rounded to centiseconds in the GIF data
+                                                  }
+                                          };
+        CGImageDestinationAddImage(destination,itemImage.CGImage, (__bridge CFDictionaryRef)frameProperties);
+    }
+    CGImageDestinationSetProperties(destination, (__bridge CFDictionaryRef)gifProperties);
+    if (!CGImageDestinationFinalize(destination)) {
+        NSLog(@"failed to finalize image destination");
+    }
+    CFRelease(destination);
+    return filePath;
+}
+
++ (UIImage *)thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time
+{
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    NSParameterAssert(asset);
+    AVAssetImageGenerator *assetImageGennerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    assetImageGennerator.appliesPreferredTrackTransform = YES;
+    assetImageGennerator.apertureMode = AVAssetImageGeneratorApertureModeEncodedPixels;
+    CGImageRef thumbnailImageRef = NULL;
+    CFTimeInterval thumbnailImageTime = time * 60;
+    NSError *thumbnailImageGenerationError = nil;
+    thumbnailImageRef = [assetImageGennerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, 60) actualTime:NULL error:&thumbnailImageGenerationError];
+    if (!thumbnailImageRef) {
+        NSLog(@"thumbnailImageGenerationError %@",thumbnailImageGenerationError);
+    }
+    UIImage *thumbnailImage = thumbnailImageRef ? [[UIImage alloc] initWithCGImage:thumbnailImageRef] : nil;
+    CFRelease(thumbnailImageRef);
+    return thumbnailImage;
+}
+
++ (CGFloat)durationForVideo:(NSURL *)mediaUrl
+{
+    AVURLAsset *avUrl = [AVURLAsset assetWithURL:mediaUrl];
+    CMTime time = [avUrl duration];
+    return ceil(time.value/time.timescale);
+
 }
 
 @end

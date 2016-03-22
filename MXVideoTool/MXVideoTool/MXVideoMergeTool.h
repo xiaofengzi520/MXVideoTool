@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef  void(^VideoMergeResultBlock)(NSURL *videoMergeUrl);
 
@@ -22,6 +23,18 @@ typedef  void(^VideoMergeResultBlock)(NSURL *videoMergeUrl);
  将所有分段视频合成为一段完整视频，并且裁剪为正方形
  */
 + (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray result:(VideoMergeResultBlock)videoMergeBlock;
+
+/*!
+  根据视频url.合成gif图
+*/
++(NSString *)exportGifImagesWithVideoUrl:(NSURL *)url;
+
+
++ (NSString *)exportGifImages:(NSArray *)images delays:(NSArray *)delays loopCount:(NSUInteger)loopCount;
+
++ (CGFloat)durationForVideo:(NSURL *)mediaUrl;
+
++ (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time;
 
 
 @end
